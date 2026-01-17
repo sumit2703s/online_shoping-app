@@ -17,4 +17,4 @@ spec:
       - name: online-shop
         image: sumit2703/online-shop:latest
         ports:
-        - containerPort: 5173
+        - containerPort: 80
