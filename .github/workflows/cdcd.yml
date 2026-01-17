@@ -35,14 +35,15 @@ jobs:
 
   deploy-to-kind:
     needs: build-and-push
-    runs-on: self-hosted
+    runs-on: [self-hosted, kind, local]
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Kind
-        uses: helm/kind-action@v1
+      - name: Set kubeconfig for Kind
+        run: |
+          kind export kubeconfig --name kind
 
       - name: Deploy to Kubernetes
         run: |
