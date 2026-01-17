@@ -1,8 +1,12 @@
+# .github/workflows/cicd.yml
 name: CI/CD Pipeline
 
 on:
   push:
     branches: [main, master]
+
+env:
+  DOCKER_IMAGE: sumit2703/online-shop
 
 jobs:
   build-and-push:
@@ -15,22 +19,41 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/online-shop:latest
-            ${{ secrets.DOCKER_USERNAME }}/online-shop:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+            ${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
 
-      - name: Success message
-        run: echo "✅ Image pushed to ${{ secrets.DOCKER_USERNAME }}/online-shop"
+  deploy-to-kind:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Kind
+        uses: helm/kind-action@v1
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/namespace.yml
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+          
+          kubectl rollout status deployment/online-shop -n online-shop
+
+      - name: Verify
+        run: |
+          kubectl get pods -n online-shop
+          kubectl get svc -n online-shop
