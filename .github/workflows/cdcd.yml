@@ -1,19 +1,8 @@
-name: Build and Push Docker Image
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
-  workflow_dispatch:  # Manual trigger option
-
-env:
-  DOCKER_IMAGE: your-dockerhub-username/online-shop
-  DOCKER_TAG: latest
+    branches: [main, master]
 
 jobs:
   build-and-push:
@@ -32,25 +21,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.DOCKER_IMAGE }}
-          tags: |
-            type=raw,value=latest
-            type=sha,prefix={{branch}}-
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/online-shop:latest
+            ${{ secrets.DOCKER_USERNAME }}/online-shop:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Image digest
-        run: echo "Image pushed with digest ${{ steps.build.outputs.digest }}
+      - name: Success message
+        run: echo "✅ Image pushed to ${{ secrets.DOCKER_USERNAME }}/online-shop"
