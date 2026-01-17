@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-shop
+  namespace: online-shop
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: online-shop
+  template:
+    metadata:
+      labels:
+        app: online-shop
+    spec:
+      containers:
+      - name: online-shop
+        image: sumit2703/online-shop:latest
+        ports:
+        - containerPort: 5173
