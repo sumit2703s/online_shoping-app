@@ -3,15 +3,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, master]
+    branches: main
 
 env:
   DOCKER_IMAGE: sumit2703/online-shop
 
 jobs:
   build-and-push:
-    runs-on: self-hosted
-    
+    runs-on: [self-hosted, kind, local]    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
