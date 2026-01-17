@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   online_shop:
-    image: your-dockerhub-username/online-shop:latest 
+    image: sumit2703/online-shop:latest  
     container_name: online_shop
     ports:
       - "3000:5173"
