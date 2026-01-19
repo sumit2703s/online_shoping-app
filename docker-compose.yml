@@ -3,8 +3,6 @@ services:
   online_shop:
     image: sumit2703/online-shop:latest  
     container_name: online_shop
-    ports:
-      - "3000:80"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/"] 
