@@ -47,15 +47,28 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
+          # Namespace
           kubectl apply -f k8s/namespace.yml
+          
+          # Deployment + Service
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
 
+          # Update deployment image
           kubectl set image deployment/online-shop online-shop=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n online-shop
           
+          # HPA
+          kubectl apply -f k8s/hpa.yml
+          
+          # Ingress / Gateway for external access
+          kubectl apply -f k8s/ingress.yml
+          
+          # Rollout status
           kubectl rollout status deployment/online-shop -n online-shop
 
       - name: Verify
         run: |
           kubectl get pods -n online-shop
           kubectl get svc -n online-shop
+          kubectl get hpa -n online-shop
+          kubectl get ingress -n online-shop
