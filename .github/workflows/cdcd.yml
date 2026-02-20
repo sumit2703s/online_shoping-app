@@ -50,6 +50,8 @@ jobs:
           kubectl apply -f k8s/namespace.yml
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
+
+          kubectl set image deployment/online-shop online-shop=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n online-shop
           
           kubectl rollout status deployment/online-shop -n online-shop
 
