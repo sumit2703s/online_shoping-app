@@ -4,7 +4,7 @@ metadata:
   name: online-shop-service
   namespace: online-shop
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: online-shop
   ports:
