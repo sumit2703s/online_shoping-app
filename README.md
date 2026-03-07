@@ -1,5 +1,4 @@
-# Online Shop 🛍️ for Hackathon Phase 1
-
+# Online Shop 🛍️
 <p align="center">
 
 Welcome to the **Online Shop** project. This repository contains a fully functional e-commerce application built to demonstrate foundational DevOps skills in three key areas:
@@ -58,7 +57,4 @@ All this while ensuring:
 
 ---
 
-Good luck for the hackathon
-
-Happy Learning :)
 # online_shoping-app
