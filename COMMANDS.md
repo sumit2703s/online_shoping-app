@@ -15,9 +15,9 @@
 
 3. Building Dockerfile
     ```powershell
-    docker build -t online_store:v1 .
-    docker tag -t muhammadabdullahabrar/practice:online_store
-    docker push muhammadabdullahabrar/practice:online_store
+    docker build -t online_shop:v1 .
+    docker tag -t sumit2703/online-shop
+    docker push sumit2703/online-shop
     ```
 4. Implementing Docker Compose
     ```powershell
@@ -25,7 +25,7 @@
     ```
 5. Using Docker Scout
     ```powershell
-    docker scout cves online_store:v1 --format markdown >> image_report.md
+    docker scout cves online_shop:v1 --format markdown >> image_report.md
     ```
 6. Testing and Checking
 
